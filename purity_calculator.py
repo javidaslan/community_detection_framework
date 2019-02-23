@@ -23,4 +23,13 @@ def purity(n, X, Y):
         purity_of_xi += calculate_purity_of_xi(x_i, Y)
     
     return purity_of_xi/n
+
+def f_measure(n, X, Y):
+    """
+    Calculate F - Measure
+    """
+    purity_x_y = purity(n, X, Y)
+    purity_y_x = purity(n, Y, X)
+
+    return (2*purity_x_y*purity_y_x)/(purity_x_y + purity_y_x)
         

@@ -1,5 +1,6 @@
 from operator import add
 from math import log2
+from math import exp
 
 def list_compare(list1, list2):
     """
@@ -87,6 +88,13 @@ def nmi_calculator(real_communities, found_communities):
     N_ij_s = generate_confusion_matrix(real_communities, found_communities)
     return calculate_numerator_of_formula(N_ij_s) / calculate_denominator_of_formula(N_ij_s)
     
-
-
-
+def snmi(nmi, real_communities, found_communities):
+    """
+    Calculate Scaled NMI
+    Ref:
+    Alessia Amelio, Clara Pizzuti - Is Normalized Mutual Information a Fair Measure for Comparing Community Detection Methods? 
+    2015 IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining
+    """
+    power_of_exp = (len(real_communities) - len(found_communities))/len(real_communities)
+    snmi = exp(-power_of_exp) * nmi
+    return snmi
