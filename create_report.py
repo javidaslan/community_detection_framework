@@ -1,19 +1,32 @@
 import datetime
-
+import os
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
 
-def create_report(results, algorithm):
+def create_directory(directory):
+    """
+    Create reports directory if does not exist
+    """
+    if not os.path.exists('reports'):
+        os.makedirs('reports')
+        os.makedirs(os.path.join('reports', directory))
+    elif not os.path.exists(os.path.join('reports', directory)):
+        os.makedirs(os.path.join('reports', directory))
+
+
+def create_report(results, algorithm, time, nodes, mu, avg_metrics):
     """
     Create Excel report with following data
     """
     print("Creating report for results")
     
+    avg_nmi, avg_snmi, avg_ari, avg_vi, avg_purity, avg_fmeasure = avg_metrics
+
     wb = Workbook()
     ws = wb.active
 
-    ws['A1'].value = 'Algorithm: {0}'.format(algorithm) 
+    ws['A1'].value = 'Algorithm: {0}'.format(algorithm)
     ws['A3'].value = 'Number of Nodes'
     ws['B3'].value = 'Number of Edges'
     ws['C3'].value = 'Degree'
@@ -23,9 +36,11 @@ def create_report(results, algorithm):
     ws['G3'].value = 'GT Communities'
     ws['H3'].value = 'Communities Found'
     ws['I3'].value = 'NMI'
-    ws['J3'].value = 'ARI'
-    ws['K3'].value = 'VI'
-    ws['L3'].value = 'Purity'
+    ws['J3'].value = 'SNMI'
+    ws['K3'].value = 'ARI'
+    ws['L3'].value = 'VI'
+    ws['M3'].value = 'Purity'
+    ws['N3'].value = 'F - Measure'
 
     for col in range(12):
         ws.cell(row=1, column=col+1).font = Font(bold=True, size=12)
@@ -43,9 +58,23 @@ def create_report(results, algorithm):
         ws['J'+str(ind+4)].value = result[9]
         ws['K'+str(ind+4)].value = result[10]
         ws['L'+str(ind+4)].value = result[11]
+        ws['M'+str(ind+4)].value = result[12]
+        ws['N'+str(ind+4)].value = result[13]
 
-    file_name = datetime.datetime.now().strftime("%d%m%Y%H%M%S") + '.xlsx'
-    wb.save(file_name)
+    ws['I'+str(ind+6)].value = avg_nmi
+    ws['J'+str(ind+6)].value = avg_snmi
+    ws['K'+str(ind+6)].value = avg_ari
+    ws['L'+str(ind+6)].value = avg_vi
+    ws['M'+str(ind+6)].value = avg_purity
+    ws['N'+str(ind+6)].value = avg_fmeasure
+
+
+    mins, seconds = divmod(time, 60)
+    ws['A' + str(ind+7)].value = "Executed time (min): {0}.{1}".format(mins, seconds)
+
+    create_directory(algorithm)
+    file_name = "{algorithm}_{nodes}_{mu}.xlsx".format(algorithm=algorithm, nodes=nodes, mu=mu)
+    wb.save(os.path.join('reports', algorithm, file_name))
     wb.close
 
     print("Report generated")
