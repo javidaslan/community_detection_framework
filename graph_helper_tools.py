@@ -21,6 +21,7 @@ def calc_metrics(nodes, real_communities, detected_communities):
             round(vi, 3), round(purity, 3), round(f_measure, 3)))
     return nmi, snmi, ari, vi, purity, f_measure
 
+
 def avg(realizations, results):
     """
     Calculate average values of metrics 
