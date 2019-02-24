@@ -1,16 +1,16 @@
 import itertools
-from community import community_louvain
 import sys
 import numpy
 import datetime
 import networkx as nx
+import igraph as ig
 import argparse
 from igraph import *
-
+import time
 
 from BenchmarkGenerator import BenchmarkGenerator
 from create_report import create_report
-from graph_helper_tools import calc_metrics
+from graph_helper_tools import calc_metrics, avg
 
 def get_communities_from_partition(partition):
     """
@@ -30,31 +30,37 @@ def get_communities_from_partition(partition):
     return communities
 
 
+
 def main(realizations, nodes, gamma, beta, mu, min_degree, max_degree, min_community, max_community):
     """
     Generate number of LFR Benchmarks and carry out experiments
     """
-    results = []
+    metrics, results = [], []
     print("Generating benchmarks")
     bg = BenchmarkGenerator(nodes=nodes, beta=beta, gamma=gamma, mu=mu, min_degree=min_degree, max_degree=max_degree, min_community=min_community, max_community=max_community)
     G_lfr = bg.generate_benchmarks(realizations)
     print("Benchmarks have been generated")
+    start_time = time.time()
     for G in G_lfr:
         print('-'*23 + str(realizations) + '-'*23)
         gt_communities = bg.detect_ground_truth_communities(G)
         print("Running algorithm")
-        communities = g.community_edge_betweenness(directed=False)
+        g = ig.Graph(edges=list(G.edges()), directed=False)
+        communities = g.community_walktrap(steps=10)
         clusters = communities.as_clustering()
         print("Number of Ground - Truth communities: {0}".format(len(gt_communities)))
-        print("Number of Edge betweennes communities: {0}".format(len(clusters)))
-        nmi, ari, vi, purity = calc_metrics(5000, gt_communities, louvain_communities)
-        results.append((nodes, len(G.edges()), bg.calc_degree(G), gamma, beta, mu, len(gt_communities), len(louvain_communities), nmi, ari, vi, purity))
+        print("Number of Walktrap communities: {0}".format(len(clusters)))
+        nmi, snmi, ari, vi, purity, f_measure = calc_metrics(5000, gt_communities, list(clusters))
+        results.append((nodes, len(G.edges()), bg.calc_degree(G), gamma, beta, mu, len(gt_communities), len(clusters), round(nmi, 4), round(snmi, 3), round(ari, 4), round(vi, 4), round(purity, 4), round(f_measure, 3)))
+        metrics.append((nmi, snmi, ari, vi, purity, f_measure))
         realizations -= 1
     print()
-    create_report(results)
+    avg_metrics = avg(metrics)
+    create_report(results, 'walktrap', time.time() - start_time, nodes, mu, avg_metrics)
 
 
 if __name__ == '__main__':
+    
     try:
 
         ap = argparse.ArgumentParser()
@@ -69,7 +75,7 @@ if __name__ == '__main__':
         ap.add_argument("-maxc", "--max-community", required=True, help="Maximum Community", type=int)
         args = vars(ap.parse_args())
         main(args['realizations'], args['nodes'], args['gamma'], args['beta'], args['mu'], args['min_degree'], args['max_degree'], args['min_community'], args['max_community'])
-    
+
     except Exception as ex:
         print(ex)
         print("Please provide number of realizations")

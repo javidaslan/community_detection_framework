@@ -3,6 +3,8 @@ import ari_calculator
 import vi_calculator
 import purity_calculator
 
+import igraph as ig
+
 def calc_metrics(nodes, real_communities, detected_communities):
     """
     Calculate:
@@ -38,3 +40,9 @@ def avg(results):
         avg_ari += ari
 
     return round(avg_nmi/100, 3), round(avg_snmi/100, 3), round(avg_ari/100, 3), round(avg_vi/100, 3), round(avg_purity/100, 3), round(avg_fmeasure/100, 3)
+
+def generate_igraph(edges):
+    
+    g = ig.Graph(edges=edges, directed=False)
+    
+    
