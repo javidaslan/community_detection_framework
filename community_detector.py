@@ -10,7 +10,7 @@ import time
 from BenchmarkGenerator import BenchmarkGenerator
 from create_report import create_report
 from graph_helper_tools import calc_metrics, avg
-from algorithms import detect_communitities
+from algorithms import detect_communities
 
 
 algorithms = ["Async Fluidc", "Fast greedy algorithm", "Louvain algorithm", "Walktrap"]
@@ -30,7 +30,7 @@ def main(algorithm, realizations, nodes, gamma, beta, mu, min_degree, max_degree
         print('-'*23 + str(next_realization) + '-'*23)
         gt_communities = bg.detect_ground_truth_communities(G)
         print("Running algorithm")
-        detected_communities = detect_communitities(algorithm, G, gt_communities) 
+        detected_communities = detect_communities(algorithm, G, gt_communities) 
         print("Number of Ground - Truth communities: {0}".format(len(gt_communities)))
         print("Number of communities found by {0} algorithm: {1}".format(algorithms[algorithm], len(detected_communities)))
         # Calculate metrics

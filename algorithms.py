@@ -1,5 +1,5 @@
 import networkx as nx
-from igraph import *
+import igraph as ig
 
 from community import community_louvain
 from networkx.algorithms.community.asyn_fluid import asyn_fluidc
@@ -7,7 +7,7 @@ from networkx.algorithms.community import greedy_modularity_communities
 
 
 
-def detect_communitities(algorithm, G, gt_communities):
+def detect_communities(algorithm, G, gt_communities):
     """
     Calculate community
     """
