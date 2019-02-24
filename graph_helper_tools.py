@@ -35,3 +35,7 @@ def avg(realizations, results):
         avg_ari += ari
 
     return round(avg_nmi/realizations, 3), round(avg_snmi/realizations, 3), round(avg_ari/realizations, 3), round(avg_vi/realizations, 3), round(avg_purity/realizations, 3), round(avg_fmeasure/realizations, 3)
+
+
+    
+    

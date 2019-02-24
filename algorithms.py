@@ -1,4 +1,5 @@
 import networkx as nx
+from igraph import *
 
 from community import community_louvain
 from networkx.algorithms.community.asyn_fluid import asyn_fluidc
@@ -13,9 +14,11 @@ def detect_communitities(algorithm, G, gt_communities):
     if algorithm == 0:
         return algorithm_asyn_fluidc(G, len(gt_communities))
     elif algorithm == 1:
-        return fast_greedy_modularity(G)
+        return algorithm_fast_greedy_modularity(G)
     elif algorithm == 2:
-        return louvain_method(G)
+        return algorithm_louvain_method(G)
+    elif algorithm == 3:
+        return algorithm_waltrap(G)
 
 def get_communities_from_partition(partition):
     """
@@ -45,14 +48,23 @@ def algorithm_asyn_fluidc(G, gt_communities_count):
 
     return communities
 
-def fast_greedy_modularity(G):
+def algorithm_fast_greedy_modularity(G):
     """
     Fast greedy community detection algorithm
     Clauset, A., Newman, M. E., & Moore, C. “Finding community structure in very large networks.” Physical Review E 70(6), 2004.
     """
     return [sorted(community) for community in greedy_modularity_communities(G)]
 
-def louvain_method(G):
+def algorithm_louvain_method(G):
     """
     """
     return get_communities_from_partition(community_louvain.best_partition(G))
+
+def algorithm_waltrap(G):
+    """
+    """
+    g = ig.Graph(edges=list(G.edges()), directed=False)
+    communities = g.community_walktrap(steps=10)
+    clusters = communities.as_clustering()
+
+    return list(clusters)
