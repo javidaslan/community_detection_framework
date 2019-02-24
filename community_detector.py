@@ -62,7 +62,7 @@ try:
         print("{index}. {algorithm}".format(index=index+1, algorithm=algorithm))
 
     selected_algorithm = int(input("\nPlease choose an algorithm that you want to apply (Insert number): "))
-    print("Selected algorithm: {0}".format(algorithms[selected_algorithm-1]))
+    print("\nSelected algorithm: {0}".format(algorithms[selected_algorithm-1]))
 
     main(selected_algorithm-1, args['realizations'], args['nodes'], args['gamma'], args['beta'], args['mu'], args['min_degree'], args['max_degree'], args['min_community'], args['max_community'])
 
