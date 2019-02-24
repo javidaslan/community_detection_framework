@@ -1,7 +1,4 @@
-import nmi_calculator
-import ari_calculator
-import vi_calculator
-import purity_calculator
+from metrics import nmi_calculator, ari_calculator, vi_calculator, purity_calculator
 
 def calc_metrics(nodes, real_communities, detected_communities):
     """
@@ -24,7 +21,7 @@ def calc_metrics(nodes, real_communities, detected_communities):
             round(vi, 3), round(purity, 3), round(f_measure, 3)))
     return nmi, snmi, ari, vi, purity, f_measure
 
-def avg(results):
+def avg(realizations, results):
     """
     Calculate average values of metrics 
     """
@@ -37,4 +34,4 @@ def avg(results):
         avg_vi += vi
         avg_ari += ari
 
-    return round(avg_nmi/100, 3), round(avg_snmi/100, 3), round(avg_ari/100, 3), round(avg_vi/100, 3), round(avg_purity/100, 3), round(avg_fmeasure/100, 3)
+    return round(avg_nmi/realizations, 3), round(avg_snmi/realizations, 3), round(avg_ari/realizations, 3), round(avg_vi/realizations, 3), round(avg_purity/realizations, 3), round(avg_fmeasure/realizations, 3)
