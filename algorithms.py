@@ -21,8 +21,6 @@ def detect_communities(algorithm, G, gt_communities):
         return algorithm_walktrap(G)
     elif algorithm == 4:
         return algorithm_eigenvectors(G, len(gt_communities))
-    elif algorithm == 5:
-        return algorithm_multilevel(G)
 
 def get_communities_from_partition(partition):
     """
