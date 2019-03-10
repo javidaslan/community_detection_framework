@@ -5,6 +5,7 @@ import datetime
 import networkx as nx
 import argparse
 import time
+import igraph
 
 
 from BenchmarkGenerator import BenchmarkGenerator
@@ -13,7 +14,8 @@ from graph_helper_tools import calc_metrics, avg
 from algorithms import detect_communities
 
 
-algorithms = ["Async Fluidc", "Fast greedy algorithm", "Louvain algorithm", "Walktrap"]
+algorithms = ["Async Fluidc", "Fast greedy algorithm", "Louvain algorithm", "Walktrap", "Eigenvectors", "Multilevel"]
+
 
 def main(algorithm, realizations, nodes, gamma, beta, mu, min_degree, max_degree, min_community, max_community):
     """
@@ -62,8 +64,12 @@ try:
         print("{index}. {algorithm}".format(index=index+1, algorithm=algorithm))
 
     selected_algorithm = int(input("\nPlease choose an algorithm that you want to apply (Insert number): "))
-    print("Selected algorithm: {0}".format(algorithms[selected_algorithm-1]))
+    print("Selected algorithm: {0}\n".format(algorithms[selected_algorithm-1]))
 
+    main(selected_algorithm-1, args['realizations'], args['nodes'], args['gamma'], args['beta'], args['mu'], args['min_degree'], args['max_degree'], args['min_community'], args['max_community'])
+
+except igraph._igraph.InternalError:
+    sys.setrecursionlimit(3000)
     main(selected_algorithm-1, args['realizations'], args['nodes'], args['gamma'], args['beta'], args['mu'], args['min_degree'], args['max_degree'], args['min_community'], args['max_community'])
 
 except ValueError as ex:

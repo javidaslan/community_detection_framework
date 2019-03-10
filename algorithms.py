@@ -18,7 +18,11 @@ def detect_communities(algorithm, G, gt_communities):
     elif algorithm == 2:
         return algorithm_louvain_method(G)
     elif algorithm == 3:
-        return algorithm_waltrap(G)
+        return algorithm_walktrap(G)
+    elif algorithm == 4:
+        return algorithm_eigenvectors(G, len(gt_communities))
+    elif algorithm == 5:
+        return algorithm_multilevel(G)
 
 def get_communities_from_partition(partition):
     """
@@ -60,11 +64,33 @@ def algorithm_louvain_method(G):
     """
     return get_communities_from_partition(community_louvain.best_partition(G))
 
-def algorithm_waltrap(G):
+def algorithm_walktrap(G):
     """
+    Pascal Pons, Matthieu Latapy: Computing communities in large networks using random walks, http://arxiv.org/abs/physics/0512106.
     """
     g = ig.Graph(edges=list(G.edges()), directed=False)
     communities = g.community_walktrap(steps=10)
     clusters = communities.as_clustering()
 
     return list(clusters)
+
+def algorithm_eigenvectors(G, gt_communities_count):
+    """
+    Raghavan, U.N. and Albert, R. and Kumara, S. 
+    Near linear time algorithm to detect community structures in large-scale networks. 
+    Phys Rev E 76:036106, 2007. http://arxiv.org/abs/0709.2938.
+    """
+    g = ig.Graph(edges=list(G.edges()), directed=False)
+    communities = g.community_leading_eigenvector(clusters=gt_communities_count)
+
+    return list(communities)
+
+def algorithm_multilevel(G):
+    """
+    VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: 
+    Fast unfolding of community hierarchies in large networks, J Stat Mech P10008 (2008), http://arxiv.org/abs/0803.0476
+    """
+    g = ig.Graph(edges=list(G.edges()), directed=False)
+    communities = g.community_multilevel()
+    
+    return list(communities)
