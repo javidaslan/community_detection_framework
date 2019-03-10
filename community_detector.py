@@ -14,7 +14,7 @@ from graph_helper_tools import calc_metrics, avg
 from algorithms import detect_communities
 
 
-algorithms = ["Async Fluidc", "Fast greedy algorithm", "Louvain algorithm", "Walktrap", "Eigenvectors", "Multilevel"]
+algorithms = ["Async Fluidc", "Fast greedy algorithm", "Louvain algorithm", "Walktrap", "Eigenvectors"]
 
 
 def main(algorithm, realizations, nodes, gamma, beta, mu, min_degree, max_degree, min_community, max_community):

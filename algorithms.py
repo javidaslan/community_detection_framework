@@ -56,17 +56,21 @@ def algorithm_fast_greedy_modularity(G):
     """
     Fast greedy community detection algorithm
     Clauset, A., Newman, M. E., & Moore, C. “Finding community structure in very large networks.” Physical Review E 70(6), 2004.
+    https://arxiv.org/pdf/cond-mat/0408187.pdf
     """
     return [sorted(community) for community in greedy_modularity_communities(G)]
 
 def algorithm_louvain_method(G):
     """
+    Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte, Etienne Lefebvre, Fast unfolding of communities in large networks
+    https://arxiv.org/pdf/0803.0476.pdf
     """
     return get_communities_from_partition(community_louvain.best_partition(G))
 
 def algorithm_walktrap(G):
     """
-    Pascal Pons, Matthieu Latapy: Computing communities in large networks using random walks, http://arxiv.org/abs/physics/0512106.
+    Pascal Pons, Matthieu Latapy: Computing communities in large networks using random walks, 
+    https://arxiv.org/pdf/physics/0512106.pdf
     """
     g = ig.Graph(edges=list(G.edges()), directed=False)
     communities = g.community_walktrap(steps=10)
@@ -78,19 +82,10 @@ def algorithm_eigenvectors(G, gt_communities_count):
     """
     Raghavan, U.N. and Albert, R. and Kumara, S. 
     Near linear time algorithm to detect community structures in large-scale networks. 
-    Phys Rev E 76:036106, 2007. http://arxiv.org/abs/0709.2938.
+    Phys Rev E 76:036106, 2007. 
+    https://arxiv.org/pdf/0709.2938.pdf
     """
     g = ig.Graph(edges=list(G.edges()), directed=False)
     communities = g.community_leading_eigenvector(clusters=gt_communities_count)
 
-    return list(communities)
-
-def algorithm_multilevel(G):
-    """
-    VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: 
-    Fast unfolding of community hierarchies in large networks, J Stat Mech P10008 (2008), http://arxiv.org/abs/0803.0476
-    """
-    g = ig.Graph(edges=list(G.edges()), directed=False)
-    communities = g.community_multilevel()
-    
     return list(communities)
