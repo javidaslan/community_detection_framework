@@ -62,10 +62,14 @@ def algorithm_fast_greedy_modularity(G):
 
 def algorithm_louvain_method(G):
     """
-    Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte, Etienne Lefebvre, Fast unfolding of communities in large networks
+    VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: 
+    Fast unfolding of community hierarchies in large networks, J Stat Mech P10008 (2008), 
     https://arxiv.org/pdf/0803.0476.pdf
     """
-    return get_communities_from_partition(community_louvain.best_partition(G))
+    g = ig.Graph(edges=list(G.edges()), directed=False)
+    communities = g.community_multilevel()
+    
+    return list(communities)
 
 def algorithm_walktrap(G):
     """
@@ -88,4 +92,4 @@ def algorithm_eigenvectors(G, gt_communities_count):
     g = ig.Graph(edges=list(G.edges()), directed=False)
     communities = g.community_leading_eigenvector(clusters=gt_communities_count)
 
-    return list(communities)
+    return list(communities)    
