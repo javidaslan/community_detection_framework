@@ -77,4 +77,4 @@ def create_report(results, algorithm, time, nodes, mu, avg_metrics):
     wb.save(os.path.join('reports', algorithm, file_name))
     wb.close
 
-    print("Report generated")
+    print("Report generated\nExecution time of algorithm: {0}.{1}".format(mins, seconds))
